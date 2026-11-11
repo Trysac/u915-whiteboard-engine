@@ -1,31 +1,10 @@
-# Security practices
+# Security & Threat Model
 
-How this repository keeps the package and its users safe. The disclosure policy is in
-[../SECURITY.md](../SECURITY.md).
+`@trysac/whiteboard-engine` processes untrusted operations and input with the following limits:
 
-## Secrets
-
-- No secrets, tokens or credentials in the repository, commit history, logs or prompts.
-- `gitleaks` runs as the last step of `npm run check` and as a dedicated CI job. Its configuration is
-  `.gitleaks.toml`.
-- Publishing credentials live only in the CI secret store or the maintainer's local npm configuration.
-
-## Dependencies
-
-- Runtime dependencies are avoided; development dependencies are limited to the toolchain listed in
-  [STACK.md](STACK.md).
-- Dependabot opens weekly updates for npm packages and GitHub Actions.
-- Commit the generated `package-lock.json` so installs are reproducible.
-
-## Code
-
-- No `eval`, dynamic `Function` construction or shelling out from library code.
-- Inputs from callers are validated and rejected with explicit errors.
-- The `security` step of `npm run check` runs ESLint with eslint-plugin-security only (Biome stays the
-  linter). Its configuration is `scripts/eslint-security.config.mjs`; inline `eslint-disable` comments are
-  ignored, so a finding is fixed in the code, never silenced.
-
-## Publishing
-
-- Packages are published from a clean checkout after `npm run check` passes.
-- Only `dist/` is included in the published tarball.
+- **Batch Size**: `applyRemote(ops)` rejects batches larger than 10,000 operations (`input_too_large`).
+- **Shape Capacity**: Total distinct shapes, including deleted tombstones, are limited by `maxShapes` (default 10,000, `too_many_shapes`).
+- **Path Complexity**: `path` shapes are limited to between 2 and 10,000 coordinates (`invalid_shape`).
+- **History**: Local undo/redo stacks are capped at `maxHistory` (default 200).
+- **Input Validation**: All shape inputs and operations are strictly validated for finite coordinates, valid hex colors, and allowed fields. Invalid operations cause an immediate `WhiteboardError` and prevent partial state application.
+- **SVG Safety**: SVG output uses rounded, validated coordinates and restricted color sets to prevent injection.
