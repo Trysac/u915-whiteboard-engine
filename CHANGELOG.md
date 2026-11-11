@@ -9,4 +9,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Added headless `Whiteboard` engine with per-field LWW CRDT replication, `Camera` transforms, 256-unit spatial grid `hitTest`, `selectInRect`, local `undo`/`redo`, and `exportSvg`.
 - Initial project structure from the factory utility template.
