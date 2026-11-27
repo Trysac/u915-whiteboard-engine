@@ -4,9 +4,15 @@ Whiteboard and diagram apps need the same hard core: a scene that two clients ca
 
 ## Installation
 
-```bash
-npm install @trysac/whiteboard-engine
+Not published to npm yet. Build it from a clone, then install it from the local path:
+
+```sh
+git clone https://github.com/Trysac/u915-whiteboard-engine.git
+cd u915-whiteboard-engine && npm ci && npm run build
+cd ../your-project && npm install ../u915-whiteboard-engine
 ```
+
+Imports keep the package name: `import { ... } from "@trysac/whiteboard-engine"`.
 
 ## Usage
 
